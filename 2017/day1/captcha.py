@@ -1,18 +1,14 @@
-'''Solve day 1 of AoC 2017, part 1'''
 from math import log, floor
-import sys
 
 
-def solve(code):
-  '''Do the thing'''
+def solve1(code):
   digits = [(code // (10 ** i)) % 10 for i in range(int(floor(log(code) / log(10))), -1, -1)]
-  match_sum = 0
+  match_sums = [0, 0]
+  num_digits = len(digits)
   for i, d in enumerate(digits):
-    if d == digits[(i + 1) % len(digits)]:
-      match_sum += d
+    if d == digits[(i + 1) % num_digits]:
+      match_sums[0] += d
+    if d == digits[(i + num_digits // 2) % num_digits]:
+      match_sums[1] += d
 
-  print(match_sum)
-
-
-if __name__ == '__main__':
-  solve(int(sys.argv[1]))
+  return match_sums
