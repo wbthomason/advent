@@ -17,8 +17,7 @@ def interpret(instrs):
   for instr in instrs:
     if eval(f'{regs[instr.c_reg]} {instr.c_op} {instr.c_val}'):
       regs[instr.reg] += instr.op * instr.val
-      if regs[instr.reg] > max_val:
-        max_val = regs[instr.reg]
+      max_val = max(max_val, regs[instr.reg])
 
   return regs, max_val
 
