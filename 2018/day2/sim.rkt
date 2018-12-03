@@ -21,9 +21,10 @@
   (let* ([charset1 (map cons (string->list id1) (range (string-length id1)))]
          [charset2 (map cons (string->list id2) (range (string-length id2)))]
          [diff (set-symmetric-difference charset1 charset2)]
-         [indices (apply set (set-map diff (lambda (x) (cdr x))))])
+         [indices (apply set (set-map diff (lambda (x) (cdr x))))]
+         [split-idx (set-first indices)])
     (if (= 1 (set-count indices))
-        (string-replace id1 (string (string-ref id1 (set-first indices))) "")
+        (string-append (substring id1 0 split-idx) (substring id1 (+ split-idx 1)))
         #f)))
 
 (define (part2 ids)
