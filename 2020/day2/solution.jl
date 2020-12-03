@@ -29,11 +29,11 @@ function parse_line(line)
   char = line[idx + 2]
   passw = line[idx + 5:end]
 
-  return low, high, char, passw
+  low, high, char, passw
 end
 
 function load(input_path)
-  return map(parse_line, readlines(input_path))
+  map(parse_line, readlines(input_path))
 end
 
 function valid_pw_1(spec)
@@ -48,20 +48,20 @@ function valid_pw_1(spec)
     idx += 1
   end
 
-  return low <= count <= high
+  low <= count <= high
 end
 
 function solve_1(data)
-  return length(filter(valid_pw_1, data))
+  length(filter(valid_pw_1, data))
 end
 
 function valid_pw_2(spec)
   low, high, char, passw = spec
-  return xor(passw[low] == char, passw[high] == char)
+  xor(passw[low] == char, passw[high] == char)
 end
 
 function solve_2(data)
-  return length(filter(valid_pw_2, data))
+  length(filter(valid_pw_2, data))
 end
 
 function solve(data)

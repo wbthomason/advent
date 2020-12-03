@@ -1,5 +1,5 @@
 function load_input(path)
-  return map(line -> parse(Int32, line), readlines(path))
+  map(line -> parse(Int32, line), readlines(path))
 end
 
 function solve_1(data)
