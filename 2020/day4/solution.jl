@@ -78,7 +78,6 @@ function is_valid(count, passport)
 
   count[1] += 1
   count[2] += valid_2
-
   return count
 end
 
