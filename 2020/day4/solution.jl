@@ -1,5 +1,3 @@
-using Printf
-
 function parse_passport(passport)
   result::Dict{String,String} = Dict()
   for chunk in split(passport)
