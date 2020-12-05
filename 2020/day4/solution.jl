@@ -10,6 +10,7 @@ end
 
 function load(path)
   passport_strings::Array{String} = []
+  sizehint!(passport_strings, 500)
   open(path) do data
     passport = ""
     while !eof(data)
@@ -29,9 +30,7 @@ function load(path)
   map(parse_passport, passport_strings)
 end
 
-function valid_year(val, start, stop)
-  length(val) == 4 && start <= parse(Int, val) <= stop
-end
+valid_year(val, start, stop) = length(val) == 4 && start <= parse(Int, val) <= stop
 
 function valid_hair(val)
   pattern = r"^#[a-f0-9]{6}$"
@@ -79,13 +78,8 @@ function is_valid(count, passport)
   return count
 end
 
-function count_valid(data)
-  reduce(is_valid, data; init=[0, 0])
-end
+count_valid(data) = reduce(is_valid, data; init=[0, 0])
+solve(data) = println(@time count_valid(data))
 
-function solve(data)
-  println(@time count_valid(data))
-end
-
-data = load("input.txt")
+data = @time load("input.txt")
 solve(data)
