@@ -1,0 +1,9 @@
+name = "advent2021"
+uuid = "2e3302c7-7427-4c07-b187-564cb384f46e"
+authors = ["Wil Thomason <wil.thomason@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+LanguageServer = "2b0e0bc5-e4fd-59b4-8912-456d1b03d8d7"
+Traceur = "37b6cedf-1f77-55f8-9503-c64b63398394"
