@@ -1,3 +1,5 @@
+using BenchmarkTools
+
 function load_input(input_path)
   map(line -> parse(Int32, line), readlines(input_path))
 end
@@ -25,8 +27,8 @@ function solve_2(data)
 end
 
 function solve(data)
-  println(@timev solve_1(data))
-  println(@timev solve_2(data))
+  println(@btime solve_1($data))
+  println(@btime solve_2($data))
 end
 
 test_data = load_input("test_input.txt")
