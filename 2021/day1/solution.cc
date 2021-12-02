@@ -5,7 +5,7 @@
 #include <vector>
 
 int solve_1(const std::vector<int> &data) {
-  int increases = 0;
+  unsigned int increases = 0;
   for (std::size_t i = 1; i < data.size(); ++i) {
     increases += data[i] > data[i - 1];
   }
@@ -13,17 +13,17 @@ int solve_1(const std::vector<int> &data) {
   return increases;
 }
 
-int solve_2(const std::vector<int> &data) {
-  int increases = 0;
-  for (std::size_t i = 3; i < data.size(); ++i) {
+int solve_2(const std::vector<unsigned short> &data) {
+  unsigned int increases = 0;
+  for (unsigned int i = 3; i < data.size(); ++i) {
     increases += data[i] > data[i - 3];
   }
 
   return increases;
 }
 
-std::vector<int> load_input(const std::string &input_path) {
-  std::vector<int> result;
+template <typename T> std::vector<T> load_input(const std::string &input_path) {
+  std::vector<T> result;
   std::ifstream input(input_path);
   std::string line;
   while (std::getline(input, line)) {
@@ -34,7 +34,7 @@ std::vector<int> load_input(const std::string &input_path) {
 }
 
 static void benchmark_solve_1(benchmark::State &state) {
-  const auto data = load_input("input.txt");
+  const auto data = load_input<int>("input.txt");
   int result;
 
   for (auto _ : state) {
@@ -45,7 +45,7 @@ static void benchmark_solve_1(benchmark::State &state) {
 }
 
 static void benchmark_solve_2(benchmark::State &state) {
-  const auto data = load_input("input.txt");
+  const auto data = load_input<unsigned short>("input.txt");
   int result;
 
   for (auto _ : state) {
