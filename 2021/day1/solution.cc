@@ -7,9 +7,7 @@
 int solve_1(const std::vector<int> &data) {
   int increases = 0;
   for (std::size_t i = 1; i < data.size(); ++i) {
-    if (data[i] > data[i - 1]) {
-      ++increases;
-    }
+    increases += data[i] > data[i - 1];
   }
 
   return increases;
@@ -18,15 +16,13 @@ int solve_1(const std::vector<int> &data) {
 int solve_2(const std::vector<int> &data) {
   int increases = 0;
   for (std::size_t i = 3; i < data.size(); ++i) {
-    if (data[i] > data[i - 3]) {
-      ++increases;
-    }
+    increases += data[i] > data[i - 3];
   }
 
   return increases;
 }
 
-std::vector<int> load_input(const std::string& input_path) {
+std::vector<int> load_input(const std::string &input_path) {
   std::vector<int> result;
   std::ifstream input(input_path);
   std::string line;
