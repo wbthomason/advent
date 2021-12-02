@@ -13,7 +13,8 @@ struct Movement {
 };
 
 unsigned int solve_1(const std::vector<Movement> &data) {
-  unsigned int depth = 0;
+  unsigned int depth_increases = 0;
+  unsigned int depth_decreases = 0;
   unsigned int dist = 0;
   // Splitting the loops like this helps, as does using the if for the first and
   // the switch for the second
@@ -26,15 +27,15 @@ unsigned int solve_1(const std::vector<Movement> &data) {
   for (const auto [d, amount] : data) {
     switch (d) {
     case Direction::Down:
-      depth += amount;
+      depth_increases += amount;
       break;
     case Direction::Up:
-      depth -= amount;
+      depth_decreases += amount;
       break;
     };
   }
 
-  return depth * dist;
+  return (depth_increases - depth_decreases) * dist;
 }
 
 unsigned int solve_2(const std::vector<Movement> &data) {
