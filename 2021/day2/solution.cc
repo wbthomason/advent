@@ -41,7 +41,7 @@ unsigned int solve_1(const std::vector<Movement> &data) {
 unsigned int solve_2(const std::vector<Movement> &data) {
   unsigned int depth = 0;
   unsigned int dist = 0;
-  unsigned int aim = 0;
+  int aim = 0;
   for (const auto [d, amount] : data) {
     switch (d) {
     case Direction::Forward:
