@@ -11,29 +11,20 @@ constexpr unsigned int masks[12]{1,      1 << 1, 1 << 2,  1 << 3,
                                  1 << 8, 1 << 9, 1 << 10, 1 << 11};
 
 unsigned int solve_1(const std::vector<unsigned int> &data) {
-  unsigned int ones[bit_width]{0};
-  unsigned int zeros[bit_width]{0};
+  unsigned int count[bit_width]{0};
   for (const auto elem : data) {
     for (auto i = 0; i < bit_width; ++i) {
-      if (elem & masks[i]) {
-        ++ones[i];
-      } else {
-        ++zeros[i];
-      }
+      count[i] += (elem & (1 << i)) > 0;
     }
   }
 
   unsigned int gamma = 0;
-  unsigned int epsilon = 0;
+  unsigned int half = data.size() / 2;
   for (auto i = 0; i < bit_width; ++i) {
-    if (ones[i] > zeros[i]) {
-      gamma |= 1 << i;
-    } else {
-      epsilon |= 1 << i;
-    }
+    gamma |= (count[i] > half) << i;
   }
 
-  return gamma * epsilon;
+  return gamma * (gamma ^ 0xfff);
 }
 
 unsigned int solve_1_alex(const std::vector<std::string> &digits) {
@@ -49,7 +40,8 @@ unsigned int solve_1_alex(const std::vector<std::string> &digits) {
     unsigned int most_common_i = counters[i] > digits.size() / 2 ? 1 : 0;
     most_common |= most_common_i << (11 - i);
   }
-  return most_common * ~most_common;
+
+  return most_common * (most_common ^ 0xfff);
 }
 
 unsigned int solve_2(const std::vector<unsigned int> &data) {
@@ -108,7 +100,7 @@ std::vector<std::string> load_input_alex(const std::string &input_path) {
 
 static void benchmark_solve_1(benchmark::State &state) {
   const auto data = load_input("input.txt");
-  int result;
+  unsigned int result;
 
   for (auto _ : state) {
     result = solve_1(data);
@@ -119,7 +111,7 @@ static void benchmark_solve_1(benchmark::State &state) {
 
 static void benchmark_solve_1_alex(benchmark::State &state) {
   const auto data = load_input_alex("input.txt");
-  int result;
+  unsigned int result;
 
   for (auto _ : state) {
     result = solve_1_alex(data);
@@ -130,7 +122,7 @@ static void benchmark_solve_1_alex(benchmark::State &state) {
 
 static void benchmark_solve_2(benchmark::State &state) {
   const auto data = load_input("input.txt");
-  int result;
+  unsigned int result;
 
   for (auto _ : state) {
     result = solve_2(data);
