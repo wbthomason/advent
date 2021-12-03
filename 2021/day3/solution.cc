@@ -6,10 +6,6 @@
 #include <vector>
 
 constexpr unsigned int bit_width = 12;
-constexpr unsigned int masks[12]{1,      1 << 1, 1 << 2,  1 << 3,
-                                 1 << 4, 1 << 5, 1 << 6,  1 << 7,
-                                 1 << 8, 1 << 9, 1 << 10, 1 << 11};
-
 unsigned int solve_1(const std::vector<unsigned int> &data) {
   unsigned int count[bit_width]{0};
   for (const auto elem : data) {
@@ -47,33 +43,62 @@ unsigned int solve_1_alex(const std::vector<std::string> &digits) {
 unsigned int solve_2(const std::vector<unsigned int> &data) {
   unsigned int ox = 0;
   unsigned int co2 = 0;
-  unsigned int num_elems_active = data.size();
-  while (num_elems_active > 1) {
-  }
+  unsigned int num_ox_elems_active = data.size();
+  unsigned int num_co2_elems_active = data.size();
+  std::vector<bool> ox_active(data.size(), true);
+  std::vector<bool> co2_active(data.size(), true);
+  unsigned int ox_active_idx = 0;
+  unsigned int co2_active_idx = 0;
+  int bit = bit_width - 1;
+  while (bit >= 0) {
+    unsigned int ox_count = 0;
+    unsigned int co2_count = 0;
+    for (unsigned int i = 0; i < data.size(); ++i) {
+      ox_count += ox_active[i] && (data[i] & (1 << bit)) > 0;
+      co2_count += co2_active[i] && (data[i] & (1 << bit)) > 0;
+    }
 
-  unsigned int ones[bit_width]{0};
-  unsigned int zeros[bit_width]{0};
-  for (const auto elem : data) {
-    for (auto i = 0; i < bit_width; ++i) {
-      if (elem & masks[i]) {
-        ++ones[i];
-      } else {
-        ++zeros[i];
+    unsigned int ox_select = ox_count >= (num_ox_elems_active + 1) / 2;
+    unsigned int co2_select = co2_count < (num_co2_elems_active + 1) / 2;
+    // std::cout << "Bit: " << bit_width - bit << std::endl;
+    // std::cout << "Ox count: " << ox_count
+    //           << " Ox active: " << num_ox_elems_active
+    //           << " Ox select: " << ox_select << "\tCo2 count: " << co2_count
+    //           << " Co2 active: " << num_co2_elems_active
+    //           << " Co2 select: " << co2_select << std::endl;
+
+    unsigned int new_num_ox_active = 0;
+    unsigned int new_num_co2_active = 0;
+    for (unsigned int i = 0; i < data.size(); ++i) {
+      ox_active[i] =
+          ox_active[i] && ((data[i] & (1 << bit)) == ox_select << bit);
+      if (ox_active[i]) {
+        ++new_num_ox_active;
+        ox_active_idx = i;
+      }
+
+      co2_active[i] =
+          co2_active[i] && ((data[i] & (1 << bit)) == co2_select << bit);
+      if (co2_active[i]) {
+        ++new_num_co2_active;
+        co2_active_idx = i;
       }
     }
+
+    num_ox_elems_active = new_num_ox_active;
+    num_co2_elems_active = new_num_co2_active;
+
+    --bit;
   }
 
-  unsigned int ox_select[bit_width]{0};
-  unsigned int co2_select[bit_width]{0};
-  for (auto i = 0; i < bit_width; ++i) {
-    if (ones[i] >= zeros[i]) {
-      ox_select[i] = 1;
-      co2_select[i] = 0;
-    } else {
-      ox_select[i] = 0;
-      co2_select[i] = 1;
-    }
-  }
+  // std::cout << ox_active_idx << ": " << data[ox_active_idx] << "\t"
+  //           << co2_active_idx << ": " << data[co2_active_idx] << std::endl;
+  // std::cout << "Num true ox: "
+  //           << std::count(ox_active.begin(), ox_active.end(), true)
+  //           << "\t Num true co2: "
+  //           << std::count(co2_active.begin(), co2_active.end(), true)
+  //           << std::endl;
+  return data[ox_active_idx] * data[co2_active_idx];
 }
 
 std::vector<unsigned int> load_input(const std::string &input_path) {
@@ -133,6 +158,6 @@ static void benchmark_solve_2(benchmark::State &state) {
 
 BENCHMARK(benchmark_solve_1);
 BENCHMARK(benchmark_solve_1_alex);
-// BENCHMARK(benchmark_solve_2);
+BENCHMARK(benchmark_solve_2);
 
 BENCHMARK_MAIN();
