@@ -1,7 +1,7 @@
 using BenchmarkTools
 
 module Day1
-function order(a, b)
+@inline function order(a, b)
   max(a, b), min(a, b)
 end
 
