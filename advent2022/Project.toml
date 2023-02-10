@@ -1,0 +1,9 @@
+name = "advent2022"
+uuid = "b8179982-7bab-4dad-a70c-4c2c7fa17ed3"
+authors = ["Wil Thomason <wil.thomason@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+Mmap = "a63ad114-7e13-5084-954f-fe012c677804"
+PackageCompiler = "9b87118b-4619-50d2-8e1e-99f35a4d4d9d"
