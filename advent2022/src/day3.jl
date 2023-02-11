@@ -2,49 +2,47 @@ using BenchmarkTools
 module Day3
 const offset = convert(UInt8, '@')
 const newline = convert(UInt8, '\n')
-const item_values = [27:52; zeros(Int, 6); 1:26; zeros(Int, 6)]
+const item_values = [27:52; zeros(UInt32, 6); 1:26; zeros(UInt32, 6)]
 function solve(input_path)
   data = read(input_path)
-  compartment_1 = falses(64)
-  compartment_2 = falses(64)
-  knapsack_start = 1
-  priority = 0
-  for i in 1:2:size(data)[1]
+  compartment_1 = UInt64(0)
+  compartment_2 = UInt64(0)
+  knapsack_start = UInt32(1)
+  priority = UInt32(0)
+  group_priority = UInt32(0)
+  group_common = typemax(UInt64)
+  group_idx = UInt32(1)
+  @inbounds for i in 1:length(data)
     if data[i] == newline
-      println(i)
-      println(knapsack_start)
       midway = (i - knapsack_start) >> 1
-      println(midway)
-      println(i - knapsack_start)
-      knapsack = data[knapsack_start:i-1] .- offset
-      for j in 1:midway
-        println(convert(Char, data[knapsack_start+j-1]))
-        compartment_1[knapsack[j]] = true
+      knapsack = @view data[knapsack_start:i-1]
+      @inbounds for j in 1:midway
+        compartment_1 |= 1 << (64 - knapsack[j] + offset)
       end
 
-      for j in (midway+1):size(knapsack)[1]
-        println(j)
-        println(convert(Char, data[knapsack_start+j-1]))
-        compartment_2[knapsack[j]] = true
+      @inbounds for j in (midway+1):length(knapsack)
+        compartment_2 |= 1 << (64 - knapsack[j] + offset)
       end
 
-      common = compartment_1 .& compartment_2
-      println(size(common))
-      println(common)
-      println(common .* item_values)
-      priority += sum(common .* item_values)
-      fill!(compartment_1, false)
-      fill!(compartment_2, false)
+      priority += item_values[leading_zeros(compartment_1 & compartment_2)+1]
+      group_common &= compartment_1 | compartment_2
+      if group_idx % 3 == 0
+        group_priority += item_values[leading_zeros(group_common)+1]
+        group_common = typemax(UInt64)
+      end
+
+      compartment_1 = UInt64(0)
+      compartment_2 = UInt64(0)
       knapsack_start = i + 1
-      println("reset")
+      group_idx += 1
     end
   end
 
-  priority
+  priority, group_priority
 end
 end
 
 if abspath(PROGRAM_FILE) == @__FILE__
-  # display(@benchmark Day3.solve(ARGS[1]))
+  display(@benchmark Day3.solve(ARGS[1]))
   println(Day3.solve(ARGS[1]))
 end
