@@ -3,11 +3,11 @@ module Day4
 const newline = convert(UInt8, '\n')
 const comma = convert(UInt8, ',')
 const hyphen = convert(UInt8, '-')
-const zero_char = convert(UInt8, '0')
+
 @inline function rangetoint(data, st, en)
   result = 0
   @inbounds for i in st:en
-    result = fma(result, 10, data[i] - zero_char)
+    result = result * 10 + data[i]
   end
 
   result
